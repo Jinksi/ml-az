@@ -39,6 +39,7 @@ cm
 # Visualising the Training set results
 from matplotlib.colors import ListedColormap
 X_set, y_set = X_train, y_train
+classifier_title = 'Classifier'
 X_label = 'Age'
 y_label = 'Estimated Salary'
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
@@ -50,7 +51,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('tomato', 'green'))(i), label = j)
-plt.title('Classifier (Training set)')
+plt.title(f'{classifier_title} (Training set)')
 plt.xlabel(X_label)
 plt.ylabel(y_label)
 plt.legend()
@@ -68,7 +69,7 @@ plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
                 c = ListedColormap(('tomato', 'green'))(i), label = j)
-plt.title('Classifier (Training set)')
+plt.title(f'{classifier_title} (Training set)')
 plt.xlabel(X_label)
 plt.ylabel(y_label)
 plt.legend()
