@@ -9,7 +9,7 @@ import pandas as pd
 dataset = pd.read_csv('Salary_Data.csv')
 X = dataset.iloc[:, :-1].values
 y = dataset.iloc[:, 1].values
-
+y[0]
 # Splitting the dataset into the Training set and Test set
 from sklearn.model_selection import train_test_split
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = 0.33, random_state = 0)
@@ -30,7 +30,6 @@ plt.title('Salary vs Experience (Training set)')
 plt.xlabel('Years of Experience')
 plt.ylabel('Salary')
 plt.show()
-
 
 # Visualise the Test set results
 plt.scatter(X_test, y_test, color='orange')
