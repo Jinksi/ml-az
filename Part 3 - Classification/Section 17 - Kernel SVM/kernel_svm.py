@@ -1,4 +1,4 @@
-# SVM
+# Kernel SVM
 
 # Importing the libraries
 import numpy as np
@@ -25,7 +25,8 @@ X_test = sc_X.transform(X_test)
 
 # Fitting SVM to the Training
 from sklearn.svm import SVC
-classifier = SVC(kernel='linear', random_state=0)
+# using a gaussian kernel
+classifier = SVC(kernel='rbf', random_state=0)
 classifier.fit(X_train, y_train)
 
 # Predicting the Test set results
@@ -41,7 +42,7 @@ cm
 # Visualising the Training set results
 from matplotlib.colors import ListedColormap
 X_set, y_set = X_train, y_train
-classifier_title = 'SVM'
+classifier_title = 'Kernel SVM'
 X_label = 'Age'
 y_label = 'Estimated Salary'
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
