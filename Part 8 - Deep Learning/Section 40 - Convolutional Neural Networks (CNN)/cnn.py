@@ -23,6 +23,13 @@ classifier.add(convolution_layer)
 pooling_layer = MaxPooling2D(pool_size=(2, 2))
 classifier.add(pooling_layer)
 
+# Add a second convolution_layer
+# remove input_shape, inferred from previous layer
+convolution_layer_2 = Convolution2D(filters=32, kernel_size=(3, 3), activation='relu')
+classifier.add(convolution_layer_2)
+pooling_layer_2 = MaxPooling2D(pool_size=(2, 2))
+classifier.add(pooling_layer_2)
+
 # Step 3 - Flattening
 flattening_layer = Flatten()
 classifier.add(flattening_layer)
@@ -71,4 +78,3 @@ classifier.fit_generator(
     epochs=25,
     validation_data=test_set,
     validation_steps=2000) # images in test set
-    
