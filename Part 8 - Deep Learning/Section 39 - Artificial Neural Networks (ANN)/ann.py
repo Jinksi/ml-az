@@ -54,17 +54,47 @@ X_test = sc_X.transform(X_test)
 #
 #
 # Part 2 - make the ANN
+import keras
+from keras.models import Sequential
+from keras.layers import Dense
 
+# Initialise the ANN
+classifier = Sequential()
+
+# adding layers
+# hidden layer nodes/units rule of thumb: average of input nodes and output nodes
+# relu = rectifier function
+hidden_layer = Dense(units=6, kernel_initializer='uniform', activation='relu')
+classifier.add(hidden_layer)
+hidden_layer_2 = Dense(units=6, kernel_initializer='uniform', activation='relu')
+classifier.add(hidden_layer_2)
+# output activation function will use sigmoid function for probability
+output_layer = Dense(units=1, kernel_initializer='uniform', activation='sigmoid')
+classifier.add(output_layer)
+
+# Compile the ANN with "Adam SGD"
+# Use logarithmic loss function
+classifier.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
+
+# Fitting the ANN to the training set
+history = classifier.fit(x=X_train, y=y_train, batch_size=10, epochs=100)
 
 #
 #
 # Part 3 - make predictions and evaluate
+
+acc_over_epochs = history.history['acc']
+plt.scatter(range(0, len(acc_over_epochs)), acc_over_epochs)
+
+
 # Predicting the Test set results
 y_pred = classifier.predict(X_test)
-y_pred
+# convert to boolean
+y_pred = y_pred > 0.5
 
 # Making the confusion matrix
 # https://en.wikipedia.org/wiki/Confusion_matrix
-from sklearn.metrics import confusion_matrix
+from sklearn.metrics import confusion_matrix, accuracy_score, classification_report
 cm = confusion_matrix(y_test, y_pred)
 cm
+print(classification_report(y_test, y_pred))
