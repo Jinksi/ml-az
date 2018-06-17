@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <meta charset="utf-8">
+    <title>Importing a Keras Model into Tensorflow.js</title>
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@0.11.6"> </script>
+    <style media="screen">
+      body {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        font-family: sans-serif;
+        font-size: 30px;
+        padding: 5vmin;
+      }
+      canvas {
+        margin-top: 20px;
+        max-width: 100%;
+        height: auto;
+      }
+    </style>
+  </head>
+  <body>
+    <script>
+      // Notice there is no 'import' statement. 'tf' is available on the index-page
+      // because of the script tag above.
+      const init = async () => {
+        window.model = await tf.loadModel('/model3/model.json')
+
+        const predict = async filename => {
+          const canvas = document.createElement('canvas')
+          document.body.appendChild(canvas)
+          const resultElement = document.createElement('p')
+          document.body.appendChild(resultElement)
+          const img = document.createElement('img')
+          img.src = filename
+          img.onload = async () => {
+            const example = tf.fromPixels(img)
+            const newImage = tf.cast(tf.image.resizeBilinear(example, [64, 64]), 'float32')
+            const norm = tf.fill([64,64, 3], 255)
+            const normalisedImage = tf.div(newImage, norm)
+            // tf.toPixels(tf.cast(tf.mul(newImage, normalisedImage), 'int32'), canvas)
+            tf.toPixels(example, canvas)
+            const predictme = tf.cast(tf.expandDims(normalisedImage), 'float32')
+            const prediction = model.predict(predictme)
+            const data = await prediction.data()
+
+            const classification = data[0] > 0.5 ? 'Dog' : 'Cat'
+            const confidence = Math.round(Math.abs(data[0] - 0.5) * 2 * 100) + '%'
+            resultElement.innerText = classification + ' - ' + confidence
+          }
+        }
+
+        predict('doggo.jpeg')
+        predict('cat.jpg')
+        predict('cat-in-street.jpg')
+        predict('dogwithhat.jpeg')
+        predict('HappyDog.jpg')
+        predict('predict.jpg')
+        predict('cat.4038.jpg')
+        predict('cat.4039.jpg')
+        predict('cat.4040.jpg')
+        predict('cat.4041.jpg')
+        predict('cat.4042.jpg')
+        predict('dog.4015.jpg')
+        predict('dog.4016.jpg')
+        predict('dog.4017.jpg')
+        predict('dog.4018.jpg')
+        predict('dog.4019.jpg')
+        predict('dog.4020.jpg')
+
+        //
+        // const img2 = document.createElement('img')
+        // img2.src = '/cat.jpg'
+        // // img2.width = 256
+        // // img2.height = 256
+        // img2.onload = () => {
+        //   const example = tf.fromPixels(img2)
+        //   const newImage = tf.cast(tf.image.resizeBilinear(example, [64, 64]), 'float32')
+        //   const norm = tf.fill([64,64, 3], 255)
+        //   const normalisedImage = tf.div(newImage, norm)
+        //   tf.toPixels(tf.cast(tf.mul(newImage, normalisedImage), 'int32'), document.querySelector('#canvas2'))
+        //   // console.log(example.reshape([64, 64, 3]))
+        //   // const imgTensor = tf.tensor(example, )
+        //   // example.reshape([64, 64, 1]).print
+        //   normalisedImage.print()
+        //   const predictme = tf.cast(tf.expandDims(normalisedImage), 'float32')
+        //   const prediction = model.predict(predictme)
+        //   console.log('cat')
+        //   prediction.print()
+        // }
+      }
+      init()
+
+    </script>
+  </body>
+</html>
