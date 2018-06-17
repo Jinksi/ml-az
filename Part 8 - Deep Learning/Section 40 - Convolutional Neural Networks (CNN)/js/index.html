@@ -13,6 +13,7 @@
         font-family: sans-serif;
         font-size: 30px;
         padding: 5vmin;
+        text-align: center;
       }
       canvas {
         margin-top: 20px;
@@ -26,7 +27,7 @@
       // Notice there is no 'import' statement. 'tf' is available on the index-page
       // because of the script tag above.
       const init = async () => {
-        window.model = await tf.loadModel('/model3/model.json')
+        window.model = await tf.loadModel('/model-2018-06-17-21-37/model.json')
 
         const predict = async filename => {
           const canvas = document.createElement('canvas')
@@ -37,18 +38,20 @@
           img.src = filename
           img.onload = async () => {
             const example = tf.fromPixels(img)
-            const newImage = tf.cast(tf.image.resizeBilinear(example, [64, 64]), 'float32')
-            const norm = tf.fill([64,64, 3], 255)
+            const newImage = tf.cast(tf.image.resizeBilinear(example, [128, 128]), 'float32')
+            const norm = tf.fill([128,128, 3], 255)
             const normalisedImage = tf.div(newImage, norm)
             // tf.toPixels(tf.cast(tf.mul(newImage, normalisedImage), 'int32'), canvas)
             tf.toPixels(example, canvas)
             const predictme = tf.cast(tf.expandDims(normalisedImage), 'float32')
             const prediction = model.predict(predictme)
+            const timeStart = new Date()
             const data = await prediction.data()
-
+            const timeEnd = new Date()
+            const duration = timeEnd - timeStart
             const classification = data[0] > 0.5 ? 'Dog' : 'Cat'
             const confidence = Math.round(Math.abs(data[0] - 0.5) * 2 * 100) + '%'
-            resultElement.innerText = classification + ' - ' + confidence
+            resultElement.innerText = `${classification} - ${confidence}\nPredict: ${duration}ms`
           }
         }
 
