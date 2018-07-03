@@ -31,7 +31,14 @@ X_test = sc_X.transform(X_test)
 ###########################################################
 # Applying PCA
 ###########################################################
-
+from sklearn.decomposition import PCA
+# Initially run with no limit on n_components to see an overview of variance
+# pca = PCA(n_components=None)
+pca = PCA(n_components=2)
+X_train = pca.fit_transform(X_train) # fit to training set and transform training set
+X_test = pca.transform(X_test) # transform training set based on previous fit
+explained_variance = pca.explained_variance_ratio_
+explained_variance
 
 # Fitting Logistic Regression to the Training
 from sklearn.linear_model import LogisticRegression
@@ -54,15 +61,15 @@ X_set, y_set = X_train, y_train
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                      np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
 plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
-             alpha = 0.75, cmap = ListedColormap(('tomato', 'green')))
+             alpha = 0.75, cmap = ListedColormap(('tomato', 'green', 'orange')))
 plt.xlim(X1.min(), X1.max())
 plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
-                c = ListedColormap(('tomato', 'green'))(i), label = j)
+                c = ListedColormap(('tomato', 'green', 'orange'))(i), label = j)
 plt.title('Classifier (Training set)')
-plt.xlabel('Age')
-plt.ylabel('Estimated Salary')
+plt.xlabel('PC1')
+plt.ylabel('PC2')
 plt.legend()
 plt.show()
 
@@ -72,14 +79,14 @@ X_set, y_set = X_test, y_test
 X1, X2 = np.meshgrid(np.arange(start = X_set[:, 0].min() - 1, stop = X_set[:, 0].max() + 1, step = 0.01),
                      np.arange(start = X_set[:, 1].min() - 1, stop = X_set[:, 1].max() + 1, step = 0.01))
 plt.contourf(X1, X2, classifier.predict(np.array([X1.ravel(), X2.ravel()]).T).reshape(X1.shape),
-             alpha = 0.75, cmap = ListedColormap(('tomato', 'green')))
+             alpha = 0.75, cmap = ListedColormap(('tomato', 'green', 'orange')))
 plt.xlim(X1.min(), X1.max())
 plt.ylim(X2.min(), X2.max())
 for i, j in enumerate(np.unique(y_set)):
     plt.scatter(X_set[y_set == j, 0], X_set[y_set == j, 1],
-                c = ListedColormap(('tomato', 'green'))(i), label = j)
-plt.title('Classifier (Training set)')
-plt.xlabel('Age')
-plt.ylabel('Estimated Salary')
+                c = ListedColormap(('tomato', 'green', 'orange'))(i), label = j)
+plt.title('Classifier (Test set)')
+plt.xlabel('PC1')
+plt.ylabel('PC2')
 plt.legend()
 plt.show()
